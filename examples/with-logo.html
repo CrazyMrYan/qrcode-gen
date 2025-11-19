@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logo嵌入示例</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #666;
+      font-weight: 500;
+    }
+    input[type="text"], input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    .range-value {
+      display: inline-block;
+      margin-left: 10px;
+      color: #007bff;
+      font-weight: bold;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #qrcode-container {
+      margin-top: 30px;
+      text-align: center;
+      padding: 30px;
+      background: #f9f9f9;
+      border-radius: 4px;
+    }
+    #qrcode-container canvas {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .info {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e7f3ff;
+      border-left: 3px solid #007bff;
+      border-radius: 4px;
+    }
+    .warning {
+      margin-top: 15px;
+      padding: 12px;
+      background: #fff3cd;
+      border-left: 3px solid #ffc107;
+      border-radius: 4px;
+      color: #856404;
+    }
+    .example-logos {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .example-logos button {
+      flex: 1;
+      padding: 8px;
+      font-size: 14px;
+      background: #6c757d;
+    }
+    .example-logos button:hover {
+      background: #5a6268;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖼️ Logo 嵌入示例</h1>
+
+    <div class="info">
+      <strong>提示:</strong> Logo会自动缩放到二维码面积的最大20%,并居中显示。建议使用高容错级别(H)以确保二维码可扫描性。
+    </div>
+
+    <div class="controls">
+      <div>
+        <div class="input-group">
+          <label for="content">二维码内容</label>
+          <input type="text" id="content" value="https://example.com">
+        </div>
+
+        <div class="input-group">
+          <label for="size">二维码尺寸</label>
+          <input type="number" id="size" value="400" min="200" max="800">
+        </div>
+
+        <div class="input-group">
+          <label for="logo-file">选择Logo图片</label>
+          <input type="file" id="logo-file" accept="image/*">
+          <div class="example-logos">
+            <button id="use-emoji">使用表情符号</button>
+            <button id="clear-logo">清除Logo</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="input-group">
+          <label for="logo-scale">
+            Logo大小
+            <span class="range-value" id="scale-value">20%</span>
+          </label>
+          <input type="range" id="logo-scale" min="5" max="20" value="20" step="1">
+        </div>
+
+        <div class="input-group">
+          <label for="border-width">Logo边框宽度(像素)</label>
+          <input type="number" id="border-width" value="4" min="0" max="20">
+        </div>
+
+        <div class="input-group">
+          <label for="error-level">容错级别(建议H级)</label>
+          <select id="error-level" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="L">L - 低(7%)</option>
+            <option value="M">M - 中(15%)</option>
+            <option value="Q">Q - 中高(25%)</option>
+            <option value="H" selected>H - 高(30%)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <button id="generate-btn">生成带Logo的二维码</button>
+
+    <div id="warnings"></div>
+    <div id="qrcode-container"></div>
+  </div>
+
+  <!-- 引入二维码生成库 (已包含所有依赖) -->
+  <script src="/Users/yanjiahui/Desktop/study/qr-code/dist/qrcode-gen.min.js"></script>
+
+  <script>
+    const contentInput = document.getElementById('content');
+    const sizeInput = document.getElementById('size');
+    const logoFileInput = document.getElementById('logo-file');
+    const logoScaleInput = document.getElementById('logo-scale');
+    const scaleValueSpan = document.getElementById('scale-value');
+    const borderWidthInput = document.getElementById('border-width');
+    const errorLevelSelect = document.getElementById('error-level');
+    const generateBtn = document.getElementById('generate-btn');
+    const useEmojiBtn = document.getElementById('use-emoji');
+    const clearLogoBtn = document.getElementById('clear-logo');
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    const warningsDiv = document.getElementById('warnings');
+
+    let currentLogoSource = null;
+
+    // 更新scale显示
+    logoScaleInput.addEventListener('input', () => {
+      scaleValueSpan.textContent = `${logoScaleInput.value}%`;
+    });
+
+    // 文件选择
+    logoFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        currentLogoSource = e.target.files[0];
+      }
+    });
+
+    // 使用表情符号作为Logo
+    useEmojiBtn.addEventListener('click', async () => {
+      // 创建一个canvas绘制表情符号
+      const canvas = document.createElement('canvas');
+      canvas.width = 100;
+      canvas.height = 100;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, 100, 100);
+      ctx.font = '80px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('😀', 50, 50);
+
+      // 转换为Blob
+      canvas.toBlob((blob) => {
+        currentLogoSource = blob;
+        logoFileInput.value = '';
+      });
+    });
+
+    // 清除Logo
+    clearLogoBtn.addEventListener('click', () => {
+      currentLogoSource = null;
+      logoFileInput.value = '';
+    });
+
+    // 生成二维码
+    generateBtn.addEventListener('click', async () => {
+      qrcodeContainer.innerHTML = '';
+      warningsDiv.innerHTML = '';
+
+      try {
+        generateBtn.disabled = true;
+        generateBtn.textContent = '生成中...';
+
+        const config = {
+          content: contentInput.value,
+          size: parseInt(sizeInput.value, 10),
+          errorCorrectionLevel: errorLevelSelect.value,
+        };
+
+        // 添加Logo配置
+        if (currentLogoSource) {
+          config.logo = {
+            source: currentLogoSource,
+            scale: parseInt(logoScaleInput.value, 10) / 100,
+            borderWidth: parseInt(borderWidthInput.value, 10),
+            borderColor: '#FFFFFF',
+          };
+        }
+
+        const canvas = await QRCodeGen.generateQRCode(config);
+        qrcodeContainer.appendChild(canvas);
+
+      } catch (error) {
+        warningsDiv.innerHTML = `<div class="warning">错误: ${error.message}</div>`;
+        console.error(error);
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = '生成带Logo的二维码';
+      }
+    });
+
+    // 初始生成(无Logo)
+    window.addEventListener('load', () => {
+      generateBtn.click();
+    });
+  </script>
+</body>
+</html>

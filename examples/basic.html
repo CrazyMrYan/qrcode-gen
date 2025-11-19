@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>基础二维码生成示例</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #666;
+      font-weight: 500;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #qrcode-container {
+      margin-top: 30px;
+      text-align: center;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 4px;
+      min-height: 100px;
+    }
+    #qrcode-container canvas {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .error {
+      color: #dc3545;
+      margin-top: 10px;
+      padding: 12px;
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      border-radius: 4px;
+    }
+    .success {
+      color: #28a745;
+      margin-top: 10px;
+      padding: 12px;
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      border-radius: 4px;
+    }
+    .code-example {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔲 基础二维码生成示例</h1>
+
+    <div class="input-group">
+      <label for="content">要编码的内容</label>
+      <textarea
+        id="content"
+        rows="3"
+        placeholder="输入要编码的文本或URL..."
+      >https://example.com</textarea>
+    </div>
+
+    <button id="generate-btn">生成二维码</button>
+
+    <div id="message"></div>
+    <div id="qrcode-container"></div>
+
+    <div class="code-example">
+      <strong>代码示例:</strong><br>
+      <pre>import { generateQRCode } from './src/index.js';
+
+// 最简单的用法
+const canvas = await generateQRCode({
+  content: 'https://example.com'
+});
+
+// 添加到页面
+document.body.appendChild(canvas);</pre>
+    </div>
+  </div>
+
+  <!-- 引入二维码生成库 (已包含所有依赖) -->
+  <script src="/Users/yanjiahui/Desktop/study/qr-code/dist/qrcode-gen.min.js"></script>
+
+  <script>
+    const contentInput = document.getElementById('content');
+    const generateBtn = document.getElementById('generate-btn');
+    const qrcodeContainer = document.getElementById('qrcode-container');
+    const messageDiv = document.getElementById('message');
+
+    generateBtn.addEventListener('click', async () => {
+      const content = contentInput.value.trim();
+
+      // 清空之前的结果
+      qrcodeContainer.innerHTML = '';
+      messageDiv.innerHTML = '';
+
+      if (!content) {
+        messageDiv.innerHTML = '<div class="error">请输入要编码的内容</div>';
+        return;
+      }
+
+      try {
+        generateBtn.disabled = true;
+        generateBtn.textContent = '生成中...';
+
+        // 生成二维码
+        const canvas = await QRCodeGen.generateQRCode({
+          content: content,
+        });
+
+        // 显示二维码
+        qrcodeContainer.appendChild(canvas);
+        messageDiv.innerHTML = '<div class="success">✓ 二维码生成成功!</div>';
+      } catch (error) {
+        messageDiv.innerHTML = `<div class="error">生成失败: ${error.message}</div>`;
+        console.error(error);
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = '生成二维码';
+      }
+    });
+
+    // 页面加载时自动生成一次
+    window.addEventListener('load', () => {
+      generateBtn.click();
+    });
+  </script>
+</body>
+</html>

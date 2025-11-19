@@ -1,50 +1,197 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+同步影响报告 (Sync Impact Report)
+================================
+版本变更: [未定义] → 1.0.0
+理由: 初始版本创建，建立核心治理原则
 
-## Core Principles
+新增原则:
+  I. 代码质量优先 (Code Quality First)
+  II. 测试驱动开发 (Test-Driven Development)
+  III. 用户体验一致性 (User Experience Consistency)
+  IV. 性能要求 (Performance Requirements)
+  V. 可维护性与文档 (Maintainability & Documentation)
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+新增章节:
+  - 开发工作流程 (Development Workflow)
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+模板状态:
+  ✅ .specify/templates/plan-template.md - 已验证宪章检查(Constitution Check)部分对齐
+  ✅ .specify/templates/spec-template.md - 已验证需求和成功标准部分对齐
+  ✅ .specify/templates/tasks-template.md - 已验证任务分类和测试要求部分对齐
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+后续工作:
+  - 无待办事项
+-->
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+# QR Code 项目宪章
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+## 输出原则
+全部采用中文注释和输出
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## 核心原则
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### I. 代码质量优先
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**声明**: 所有提交的代码必须达到可生产环境标准，不容妥协。
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+**规则**:
+- 代码必须遵循项目编码规范和风格指南
+- 禁止提交包含 TODO 或 FIXME 注释的代码到主分支
+- 代码复杂度必须控制在合理范围内（圈复杂度 < 10）
+- 所有公共 API 必须包含完整的类型注解或类型定义
+- 代码审查必须通过至少一名审查者的批准
+- 静态代码分析工具（linter）检查必须通过，零警告
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+**理由**: 高质量的代码减少技术债务，降低维护成本，提高开发效率。代码是团队共同的资产，必须对未来的维护者负责。
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### II. 测试驱动开发（非协商）
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**声明**: 测试优先策略是强制性的，所有功能必须先编写测试。
+
+**规则**:
+- 必须遵循红-绿-重构循环：
+  1. 编写失败的测试
+  2. 获得用户批准
+  3. 验证测试失败
+  4. 实现功能使测试通过
+  5. 重构优化
+- 代码覆盖率要求：
+  - 单元测试覆盖率 ≥ 80%
+  - 核心业务逻辑覆盖率 ≥ 95%
+- 测试类型要求：
+  - 单元测试：测试独立功能单元
+  - 集成测试：测试模块间交互
+  - 契约测试：验证 API 接口契约
+- 禁止为了通过测试而修改测试用例（除非需求变更）
+- 所有 bug 修复必须先编写重现 bug 的测试
+
+**理由**: TDD 确保代码按预期工作，防止回归，提供活文档，使重构更安全。测试是质量保证的第一道防线。
+
+### III. 用户体验一致性
+
+**声明**: 用户体验必须在所有平台、功能和交互点保持一致。
+
+**规则**:
+- UI/UX 设计必须遵循统一的设计系统或设计规范
+- 交互模式必须在整个应用中保持一致：
+  - 相同操作使用相同的交互方式
+  - 相同信息使用相同的展示格式
+  - 错误消息必须清晰、可操作、统一格式
+- 响应时间要求：
+  - 用户操作反馈 < 100ms（视觉反馈）
+  - 页面/界面加载 < 2秒
+  - 超过 2 秒的操作必须显示进度指示器
+- 可访问性要求：
+  - 支持键盘导航
+  - 支持屏幕阅读器
+  - 色彩对比度符合 WCAG 2.1 AA 标准
+- 错误处理必须优雅：
+  - 提供清晰的错误信息
+  - 提供恢复或替代方案
+  - 记录错误日志供排查
+
+**理由**: 一致的用户体验建立用户信任，降低学习成本，提升用户满意度和留存率。用户不应该在使用过程中感到困惑或挫败。
+
+### IV. 性能要求
+
+**声明**: 性能是功能的一部分，必须从设计阶段就予以考虑。
+
+**规则**:
+- 性能指标必须可量化、可监控：
+  - 响应时间：API 请求 p95 < 200ms
+  - 吞吐量：系统必须支持预期负载的 2 倍容量
+  - 内存使用：单个进程内存占用 < 512MB（根据项目调整）
+  - 客户端性能：首次内容绘制(FCP) < 1.5秒
+- 性能测试必须包含在 CI/CD 流程：
+  - 负载测试：模拟正常和峰值负载
+  - 压力测试：测试系统极限
+  - 性能回归测试：防止性能退化
+- 资源优化要求：
+  - 图片和静态资源必须压缩和优化
+  - 使用缓存策略减少重复计算和网络请求
+  - 数据库查询必须优化（使用索引、避免 N+1 查询）
+  - 前端资源必须进行代码分割和懒加载
+- 性能退化必须及时发现和修复：
+  - 性能监控和告警机制
+  - 定期性能审计
+
+**理由**: 性能直接影响用户体验和系统可扩展性。性能问题往往在后期难以修复，必须从设计阶段就建立性能意识。
+
+### V. 可维护性与文档
+
+**声明**: 代码必须易于理解和维护，文档是代码的延伸。
+
+**规则**:
+- 代码自文档化要求：
+  - 变量和函数命名必须清晰表达意图
+  - 复杂逻辑必须添加注释说明"为什么"（而非"做什么"）
+  - 避免使用"魔法数字"和"魔法字符串"，使用常量替代
+- 文档要求：
+  - README 必须包含：项目简介、快速开始、安装指南、基本使用
+  - API 文档必须包含：接口说明、参数、返回值、示例、错误码
+  - 架构文档必须说明：系统设计、核心概念、数据流
+  - 每个功能必须包含 quickstart.md 演示基本使用
+- 依赖管理：
+  - 依赖版本必须明确锁定
+  - 定期更新依赖并测试兼容性
+  - 移除未使用的依赖
+- 重构要求：
+  - 持续重构保持代码健康
+  - 重构不改变外部行为
+  - 重构必须有测试保护
+
+**理由**: 可维护的代码库延长项目生命周期，降低新成员上手成本。好的文档是团队知识传承的基石。
+
+## 开发工作流程
+
+**分支策略**:
+- 主分支（main/master）永远保持可部署状态
+- 功能分支命名：`###-feature-name`（按功能规范编号）
+- 提交前必须通过所有本地测试和 lint 检查
+
+**代码审查要求**:
+- 所有代码必须经过 Pull Request 流程
+- PR 必须包含：
+  - 清晰的描述说明变更内容和原因
+  - 相关的测试用例
+  - 必要的文档更新
+  - 通过所有 CI 检查
+- 审查者必须验证：
+  - 代码符合所有宪章原则
+  - 测试充分且通过
+  - 性能影响可接受
+  - 文档完整准确
+
+**质量门禁**:
+- 自动化检查：
+  - 所有测试通过（单元、集成、契约测试）
+  - 代码覆盖率达标
+  - 静态代码分析通过
+  - 性能基准测试未退化
+- 人工审查：
+  - 至少一名审查者批准
+  - 架构设计合理性评估（如有重大变更）
+
+## 治理
+
+**宪章权威**: 本宪章是项目开发的最高指导原则，所有开发活动必须符合宪章要求。
+
+**修订流程**:
+- 修订提议必须文档化，说明：
+  - 修订内容和原因
+  - 影响范围评估
+  - 迁移计划（如需要）
+- 修订必须获得团队讨论和批准
+- 修订后必须更新版本号（遵循语义化版本）
+
+**合规性审查**:
+- 每个 Pull Request 必须通过宪章合规性检查
+- 如有违反宪章的情况必须说明理由和替代方案
+- 技术复杂度增加必须在 plan.md 的 Complexity Tracking 表格中记录并充分论证
+
+**版本控制**:
+- 重大不兼容变更：MAJOR 版本递增
+- 新增原则或章节：MINOR 版本递增
+- 澄清、修辞、格式优化：PATCH 版本递增
+
+**Version**: 1.0.0 | **Ratified**: 2025-11-19 | **Last Amended**: 2025-11-19

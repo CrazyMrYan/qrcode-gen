@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多格式输出示例</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 30px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #666;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 30px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .formats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+    }
+    .format-card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    .format-card h3 {
+      margin-top: 0;
+      color: #333;
+      font-size: 18px;
+    }
+    .format-card .output {
+      text-align: center;
+      padding: 20px;
+      background: white;
+      border-radius: 4px;
+      margin: 15px 0;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .format-card canvas, .format-card img {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .format-card .code {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      overflow-x: auto;
+      word-break: break-all;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+    .format-card .info {
+      margin-top: 10px;
+      padding: 10px;
+      background: #e7f3ff;
+      border-left: 3px solid #007bff;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📦 多格式输出示例</h1>
+
+    <div class="input-group">
+      <label for="content">要编码的内容</label>
+      <input type="text" id="content" value="https://example.com" placeholder="输入URL或文本">
+    </div>
+
+    <button id="generate-btn">生成所有格式</button>
+
+    <div class="formats-grid">
+      <!-- Canvas 格式 -->
+      <div class="format-card">
+        <h3>🖼️ Canvas 格式</h3>
+        <div class="output" id="canvas-output"></div>
+        <div class="info">
+          <strong>用途:</strong> 直接插入DOM,可进一步处理(如添加Logo)
+        </div>
+        <div class="code" id="canvas-code"></div>
+      </div>
+
+      <!-- SVG 格式 -->
+      <div class="format-card">
+        <h3>📐 SVG 格式</h3>
+        <div class="output" id="svg-output"></div>
+        <div class="info">
+          <strong>用途:</strong> 矢量图形,适合印刷和缩放
+        </div>
+        <div class="code" id="svg-code"></div>
+      </div>
+
+      <!-- Base64 格式 -->
+      <div class="format-card">
+        <h3>🔤 Base64 格式</h3>
+        <div class="output" id="base64-output"></div>
+        <div class="info">
+          <strong>用途:</strong> 嵌入HTML/CSS,无需额外HTTP请求
+        </div>
+        <div class="code" id="base64-code"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入二维码生成库 (已包含所有依赖) -->
+  <script src="/Users/yanjiahui/Desktop/study/qr-code/dist/qrcode-gen.min.js"></script>
+
+  <script>
+    const contentInput = document.getElementById('content');
+    const generateBtn = document.getElementById('generate-btn');
+
+    generateBtn.addEventListener('click', async () => {
+      const content = contentInput.value.trim();
+
+      if (!content) {
+        alert('请输入要编码的内容');
+        return;
+      }
+
+      try {
+        generateBtn.disabled = true;
+        generateBtn.textContent = '生成中...';
+
+        // 生成 Canvas 格式
+        const canvas = await QRCodeGen.generateQRCode({
+          content,
+          outputFormat: 'canvas',
+          size: 200,
+        });
+        document.getElementById('canvas-output').innerHTML = '';
+        document.getElementById('canvas-output').appendChild(canvas);
+        document.getElementById('canvas-code').textContent =
+          `const canvas = await QRCodeGen.generateQRCode({\n  content: '${content}',\n  outputFormat: 'canvas'\n});`;
+
+        // 生成 SVG 格式
+        const svg = await QRCodeGen.generateQRCode({
+          content,
+          outputFormat: 'svg',
+          size: 200,
+        });
+        document.getElementById('svg-output').innerHTML = svg;
+        document.getElementById('svg-code').textContent =
+          `const svg = await QRCodeGen.generateQRCode({\n  content: '${content}',\n  outputFormat: 'svg'\n});\n// 返回: ${svg.substring(0, 50)}...`;
+
+        // 生成 Base64 格式
+        const base64 = await QRCodeGen.generateQRCode({
+          content,
+          outputFormat: 'base64',
+          size: 200,
+        });
+        const img = document.createElement('img');
+        img.src = base64;
+        img.style.width = '200px';
+        img.style.height = '200px';
+        document.getElementById('base64-output').innerHTML = '';
+        document.getElementById('base64-output').appendChild(img);
+        document.getElementById('base64-code').textContent =
+          `const base64 = await generateQRCode({\n  content: '${content}',\n  outputFormat: 'base64'\n});\n// 返回: ${base64.substring(0, 50)}...`;
+
+      } catch (error) {
+        alert(`生成失败: ${error.message}`);
+        console.error(error);
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = '生成所有格式';
+      }
+    });
+
+    // 初始生成
+    window.addEventListener('load', () => {
+      generateBtn.click();
+    });
+  </script>
+</body>
+</html>

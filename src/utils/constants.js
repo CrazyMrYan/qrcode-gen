@@ -1,0 +1,70 @@
+/**
+ * 常量定义
+ * 包含默认配置、错误码、限制值等
+ */
+
+// 默认配置
+export const DEFAULT_CONFIG = {
+  size: 256,
+  errorCorrectionLevel: 'M',
+  foregroundColor: '#000000',
+  backgroundColor: '#FFFFFF',
+  logo: null,
+  outputFormat: 'canvas',
+  margin: 4,
+};
+
+// 限制值
+export const LIMITS = {
+  MIN_SIZE: 100, // 最小二维码尺寸(像素)
+  MAX_CONTENT_LENGTH: 2953, // 最大内容长度(QR Code Version 40, L级)
+  LOGO_MAX_SCALE: 0.2, // Logo最大占比(20%面积)
+  MIN_CONTRAST_RATIO: 3, // 最小对比度比率(3:1)
+  LOGO_LOAD_TIMEOUT: 5000, // Logo加载超时(毫秒)
+};
+
+// 错误码
+export const ERROR_CODES = {
+  // 验证错误
+  ERR_CONTENT_EMPTY: 'ERR_CONTENT_EMPTY',
+  ERR_CONTENT_TOO_LONG: 'ERR_CONTENT_TOO_LONG',
+  ERR_INVALID_SIZE: 'ERR_INVALID_SIZE',
+  ERR_INVALID_ERROR_CORRECTION_LEVEL: 'ERR_INVALID_ERROR_CORRECTION_LEVEL',
+  ERR_INVALID_COLOR: 'ERR_INVALID_COLOR',
+  ERR_INVALID_OUTPUT_FORMAT: 'ERR_INVALID_OUTPUT_FORMAT',
+  ERR_INVALID_LOGO_SOURCE: 'ERR_INVALID_LOGO_SOURCE',
+  ERR_INVALID_LOGO_SCALE: 'ERR_INVALID_LOGO_SCALE',
+
+  // 加载错误
+  ERR_LOGO_LOAD_FAILED: 'ERR_LOGO_LOAD_FAILED',
+  ERR_LOGO_LOAD_TIMEOUT: 'ERR_LOGO_LOAD_TIMEOUT',
+
+  // 编码错误
+  ERR_ENCODING_FAILED: 'ERR_ENCODING_FAILED',
+  ERR_RENDERING_FAILED: 'ERR_RENDERING_FAILED',
+};
+
+// 警告类型
+export const WARNING_TYPES = {
+  LOW_CONTRAST: 'LOW_CONTRAST',
+  SIZE_ADJUSTED: 'SIZE_ADJUSTED',
+  LOGO_SCALED: 'LOGO_SCALED',
+};
+
+// 有效的错误纠正级别
+export const VALID_ERROR_CORRECTION_LEVELS = ['L', 'M', 'Q', 'H'];
+
+// 有效的输出格式
+export const VALID_OUTPUT_FORMATS = ['canvas', 'svg', 'base64'];
+
+// WCAG 2.1 相对亮度计算常量
+export const WCAG_LUMINANCE_CONSTANTS = {
+  RED_COEFFICIENT: 0.2126,
+  GREEN_COEFFICIENT: 0.7152,
+  BLUE_COEFFICIENT: 0.0722,
+  GAMMA_THRESHOLD: 0.03928,
+  GAMMA_DIVISOR: 12.92,
+  GAMMA_OFFSET: 0.055,
+  GAMMA_MULTIPLIER: 1.055,
+  GAMMA_EXPONENT: 2.4,
+};
