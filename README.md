@@ -20,7 +20,7 @@
 ### NPM 安装
 
 ```bash
-npm install qrcode-gen
+npm install @yjh1102/qrcode-gen
 ```
 
 ### 浏览器直接使用
@@ -45,7 +45,7 @@ npm install qrcode-gen
 ### 基础使用 (ES模块)
 
 ```javascript
-import { generateQRCode } from 'qrcode-gen';
+import { generateQRCode } from '@yjh1102/qrcode-gen';
 
 // 生成基础二维码
 const canvas = await generateQRCode({

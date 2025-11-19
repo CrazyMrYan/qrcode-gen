@@ -271,7 +271,7 @@ const canvas = await generateQRCode({
 ### 使用默认配置
 
 ```javascript
-import { DEFAULT_CONFIG } from 'qrcode-gen';
+import { DEFAULT_CONFIG } from '@yjh1102/qrcode-gen';
 
 console.log(DEFAULT_CONFIG);
 // {

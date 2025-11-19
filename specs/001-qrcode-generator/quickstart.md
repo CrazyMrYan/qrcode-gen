@@ -10,7 +10,7 @@
 **需求**: 将网站URL转换为二维码,方便用户扫码访问。
 
 ```javascript
-import { generateQRCode } from 'qrcode-gen';
+import { generateQRCode } from '@yjh1102/qrcode-gen';
 
 // 生成网站URL二维码
 const canvas = await generateQRCode({

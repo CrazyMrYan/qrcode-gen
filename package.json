@@ -1,5 +1,5 @@
 {
-  "name": "qrcode-gen",
+  "name": "@yjh1102/qrcode-gen",
   "version": "0.1.0",
   "description": "一个功能完善的二维码生成工具库,支持颜色定制、尺寸调整、Logo嵌入和多格式输出",
   "main": "dist/qrcode-gen.js",
